@@ -5,6 +5,8 @@ const app = express();
 const fs = require("fs");
 //const mysql = require('mysql');
 const { JSDOM } = require('jsdom');
+// const $ =  require('jquery');
+
 
 // another potential topic, no time :/
 // https://www.npmjs.com/package/express-brute
@@ -21,8 +23,8 @@ app.use('/media', express.static('assets/media'));
 
 app.use(session(
   {
-      secret:'extra text that no one will guess',
-      name:'wazaSessionID',
+      secret:'for logging in',
+      name:'openSession',
       resave: false,
       saveUninitialized: true }));
 
@@ -40,14 +42,12 @@ app.get('/', function (req, res) {
     let d = new Date().toLocaleDateString("en-US", dateOptions);
     // where we'll slip in an audio player into the footer's left :)
     $("#footer").append('<div id="left"></div>');
-    $("#footer").append("<p id='right'>Copyright ©2021, (YOUR NAME HERE), Inc. Updated: " + d + "</p>");
+    $("#footer").append("<p id='right'>Copyright ©2021, (Team 15, Ray, Maz, Johnson, and Jason), Inc. Updated: " + d + "</p>");
 
 
 
-    initDB();
+    // initDB();
 
-    res.set('Server', 'Wazubi Engine');
-    res.set('X-Powered-By', 'Wazubi');
     res.send(dom.serialize());
 
 });
@@ -269,5 +269,5 @@ app.get('/logout', function(req,res){
 // RUN SERVER
 let port = 8000;
 app.listen(port, function () {
-    console.log('Listening on port ' + port + '!');
+    console.log('Running on: ' + port);
 })

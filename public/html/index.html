@@ -1,76 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Social Night</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Yay! Pandemic Over! We can hang out again!"/>
 
-    <!-- Generate favicons using: https://favicon.io/ -->
-    <link href="/img/favicon.ico" rel="icon" type="image/x-icon" />
-    <link href="/css/style.css" rel="stylesheet"/>
-    <link href="/css/jquery.button-audio-player.css" rel="stylesheet"/>
-  </head>
-  <body>
-    <div id="formPanel">
-      <form id='loginForm'>
-        <p id="formTitle">Welcome</p>
-        <input id='email' type='email' required="required" placeholder="Email"/>
-        <input id='password' type='password' required="required" placeholder="Password"/>
-        <input type="button" value="Login" id="submit"/>
-        <p><span id="serverMsg"></span></p>
-        <p id="forgotP"><a href="#">Forgot Login</a>?</p>
-        <p id="notMemberP"><a href="#">Get Membership</a></p>
-        <p id="errorMsg">&nbsp;</p>
-      </form>
-    </div>
+<head>
+  <title>We Cycle</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--<meta name="description" content="Yay! Pandemic Over! We can hang out again!" />-->
 
-    <footer id="footer">
+  <!-- Generate favicons using: https://favicon.io/ -->
+  <link href="../images/favicon-32x32.png" rel="icon" type="image/x-icon" />
+  <link href="../css/style.css" rel="stylesheet" />
 
-    </footer>
+  <!--<link href="/css/jquery.button-audio-player.css" rel="stylesheet" />-->
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
 
-    <script src="/js/jquery-3.6.0.min.js"></script>
-    <script src="/js/jquery.button-audio-player.js"></script>
-    <script>
-      $(document).ready(function() {
-/*
-          Great resource for jQuery plugins, that's where I found the audio player plugin
-          https://www.jqueryscript.net/other/single-button-audio-player.html
-          MIT License
- */
-          $('#left').buttonAudioPlayer({
-              /* 57 year old Norman Cook, godfather of big beat, AKA Fatboy Slim */
-              src: '/media/On_the_Floor_Gonna_Shake_It_-_Fatboy_Slim_and_Idris_Elba.mp3',
-              type:'bar-animation',
-              loop:true
-            });
+<body>
+  <div id="formPanel">
+    <form id='loginForm'>
+      <p id="formTitle">Welcome</p>
+      <input id='email' type='email' required="required" placeholder="Email" />
+      <input id='password' type='password' required="required" placeholder="Password" />
+      <input type="button" value="Login" id="submit" />
+      <p><span id="serverMsg"></span></p>
+      <p id="forgotP"><a href="#">Forgot Password</a>?</p>
+      <p id="errorMsg">&nbsp;</p>
+    </form>
+  </div>
 
-        $("#submit").click(function() {
-            $.ajax({
-                url: "/authenticate",
-                type: "POST",
-                dataType: "JSON",
-                data: { email: $("#email").val(), password: $("#password").val() },
-                success: function(data) {
-                    //console.log("Data returned from server: ", data);
-                    if(data['status'] == "success") {
-                        // redirect
-                        window.location.replace("/profile");
-                    } else {
-                        // show error message
-                        $("#errorMsg").html(data['msg']);
-                    }
+  <footer id="footer">
 
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    $("body").text(jqXHR.statusText);
-                }
-            });
+  </footer>
 
-        });
-
-      });
-
-    </script>
+  <script src="../js/client.js"></script> 
 </body>
-</html>
+
+</html >
