@@ -2,12 +2,12 @@
 
 $(document).ready(function () {
 
-    $("#submit").on("click",function () {
+    $("#login-submit").on("click",function () {
       $.ajax({
         url: "/authenticate",
         type: "POST",
         dataType: "JSON",
-        data: { email: $("#email").val(), password: $("#password").val() },
+        data: { email: $("#login-email").val(), password: $("#login-password").val() },
         success: function (data) {
           //console.log("Data returned from server: ", data);
           if (data['status'] == "success") {
@@ -17,7 +17,7 @@ $(document).ready(function () {
 
           } else {
             // show error message
-            $("#errorMsg").html(data['msg']);
+            $("#error").html(data['msg']);
           }
 
         },
