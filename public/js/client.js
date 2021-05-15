@@ -10,7 +10,9 @@ $(document).ready(function () {
           //console.log("Data returned from server: ", data);
           if (data['status'] == "success") {
             // redirect
-            window.location.replace("/profile");
+            console.log("logged in!!");
+            window.location.replace("/dashboard");
+
           } else {
             // show error message
             $("#errorMsg").html(data['msg']);
