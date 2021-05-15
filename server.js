@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require("express");
 const session = require("express-session");
 const app = express();
@@ -9,6 +11,7 @@ const {
   MongoClient,
   ObjectID, // we may actually ned the object id
 } = require("mongodb");
+const { strict } = require("is-typedarray");
 
 const client = new MongoClient(
   "mongodb+srv://wecycle-vancouver.2hson.mongodb.net/myFirstDatabase?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority",
@@ -20,12 +23,12 @@ const client = new MongoClient(
 );
 
 // static path mappings
-app.use("/js", express.static("assets/js"));
-app.use("/css", express.static("assets/css"));
-app.use("/img", express.static("assets/imgs"));
-app.use("/fonts", express.static("assets/fonts"));
-app.use("/html", express.static("assets/html"));
-app.use("/media", express.static("assets/media"));
+app.use("/js", express.static("public/js"));
+app.use("/css", express.static("public/css"));
+app.use("/img", express.static("public/imgs"));
+app.use("/fonts", express.static("public/fonts"));
+app.use("/html", express.static("public/html"));
+app.use("/media", express.static("public/media"));
 
 app.use(
   session({
@@ -70,7 +73,7 @@ async function initDB() {
   });
 }
 
-app.get("/profile", function (req, res) {
+app.get("/dashboard", function (req, res) {
   // check for a session first!
   if (req.session.loggedIn) {
     // DIY templating with DOM, this is only the husk of the page
@@ -128,19 +131,22 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/authenticate", function (req, res) {
   res.setHeader("Content-Type", "application/json");
 
-  //    console.log("Email", req.body.email);
-  //    console.log("Password", req.body.password);
+  console.log("Email", req.body.email);
+  console.log("Password", req.body.password);
+
+
 
   let results = authenticate(
     req.body.email,
     req.body.password,
     function (rows) {
-      //console.log(rows.password);
+
       if (rows == null) {
         // not found
-        res.send({ status: "fail", msg: "User account not found." });
+        res.send({ status: "fail", msg: "email or password dont match our records" });
       } else {
         // authenticate the user, create a session
+        console.log(rows.password);
         req.session.loggedIn = true;
         req.session.email = rows.email;
         req.session.save(function (err) {
@@ -156,25 +162,56 @@ app.post("/authenticate", function (req, res) {
   );
 });
 
-function authenticate(email, pwd, callback) {
+function authenticate(emailArg, pwd, callback) {
+    // initDB();
+  client.db("WecycleMain").collection("Users")
+    .find({ "email": emailArg, "password": pwd })
+    .toArray()
+    .then((data) => {
+        if (data.length > 0) {
+            // email and password found
+            // console.log(data);
+            return callback(data[0]);
+          } else {
+            // user not found
+            return callback(null);
+          }
+    });
     
-  connection.query(
-    "SELECT * FROM user WHERE email = ? AND password = ?",
-    [email, pwd],
-    function (error, results) {
-      if (error) {
-        throw error;
-      }
 
-      if (results.length > 0) {
-        // email and password found
-        return callback(results[0]);
-      } else {
-        // user not found
-        return callback(null);
-      }
-    }
-  );
+
+//     (error, results) => {
+//       if (error) {
+//         throw error;
+//       }
+//       if (results.length > 0) {
+//         // email and password found
+//         console.log(results);
+//         return callback(results[0]);
+//       } else {
+//         // user not found
+//         return callback(null);
+//       }
+//     }
+//   );
+
+  //   connection.query(
+  //     "SELECT * FROM user WHERE email = ? AND password = ?",
+  //     [email, pwd],
+  //     function (error, results) {
+  //       if (error) {
+  //         throw error;
+  //       }
+
+  //       if (results.length > 0) {
+  //         // email and password found
+  //         return callback(results[0]);
+  //       } else {
+  //         // user not found
+  //         return callback(null);
+  //       }
+  //     }
+  //   );
 }
 
 app.get("/logout", function (req, res) {
