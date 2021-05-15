@@ -63,62 +63,11 @@ app.get("/", function (req, res) {
   res.send(dom.serialize());
 });
 
-// async together with await
+// async together with await connect to mongodb
 async function initDB() {
   client.connect().then(function () {
     console.log("db is running");
   });
-}
-
-//////////////////////////////////////////////////////////////////////
-// DOESN'T WORK AS WE WANT!!!
-//////////////////////////////////////////////////////////////////////
-function initDBAsyncProblem() {
-  // Let's build the DB if it doesn't exist
-  const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    multipleStatements: true,
-  });
-
-  const createDBAndTables = `CREATE DATABASE IF NOT EXISTS test;
-        use test;
-        CREATE TABLE IF NOT EXISTS user (
-        ID int NOT NULL AUTO_INCREMENT,
-        email varchar(30),
-        password varchar(30),
-        PRIMARY KEY (ID));`;
-
-  connection.connect();
-  connection.query(createDBAndTables, function (error, results, fields) {
-    if (error) {
-      throw error;
-    }
-  });
-  let count = 0;
-  connection.query(
-    "SELECT COUNT(*) FROM user",
-    function (error, results, fields) {
-      if (error) {
-        throw error;
-      }
-      count = results[0]["COUNT(*)"];
-      console.log("count in the callback is", count);
-    }
-  );
-  console.log("count out of the callback is", count);
-  if (count == 0) {
-    connection.query(
-      "INSERT INTO user (email, password) values ('arron@bcit.ca', 'admin')",
-      function (error, results, fields) {
-        if (error) {
-          throw error;
-        }
-      }
-    );
-  }
-  connection.end();
 }
 
 app.get("/profile", function (req, res) {
@@ -208,14 +157,7 @@ app.post("/authenticate", function (req, res) {
 });
 
 function authenticate(email, pwd, callback) {
-  const mysql = require("mysql2");
-  const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "test",
-  });
-
+    
   connection.query(
     "SELECT * FROM user WHERE email = ? AND password = ?",
     [email, pwd],
