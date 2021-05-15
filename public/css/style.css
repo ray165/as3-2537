@@ -1,0 +1,23 @@
+body {
+    background-image: url('../images/water-bottle.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}
+
+#heading {
+    margin-bottom: 5%;
+}
+
+#landing {
+    border: 10px solid rgba(0, 0, 0, 0.438);
+    padding: 10px;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 20%;
+}
+
+#landing-login {
+    text-align: center;
+}

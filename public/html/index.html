@@ -8,7 +8,7 @@
   <!--<meta name="description" content="Yay! Pandemic Over! We can hang out again!" />-->
 
   <!-- Generate favicons using: https://favicon.io/ -->
-  <link href="../images/favicon-32x32.png" rel="icon" type="image/x-icon" />
+  <link rel = "shortcut icon" type="image/png" href="../images/favicon-32x32.png">
   <link href="../css/style.css" rel="stylesheet" />
 
   <!--<link href="/css/jquery.button-audio-player.css" rel="stylesheet" />-->
@@ -20,29 +20,14 @@
 
 <body>
   <div id = "landing">
-    <h5 id = "heading">Team 15 Wecycle</h5>
-    
+    <div id = "landing-login">
+      <h5 id = "heading">Team 15 Wecycle</h5>
+      <input id = "login-email" type="email" required="required" placeholder="Email" />
+      <input id = "login-password" type="password" required="required" placeholder="Password" />
+      <input type = "button" value = "login" id = "login-submit" />
+    </div>
   </div>
+  <p id = "error"></p>
 </body>
-<!--
-<body>
-  <div id="formPanel">
-    <form id='loginForm'>
-      <p id="formTitle">Welcome</p>
-      <input id='email' type='email' required="required" placeholder="Email" />
-      <input id='password' type='password' required="required" placeholder="Password" />
-      <input type="button" value="Login" id="submit" />
-      <p><span id="serverMsg"></span></p>
-      <p id="forgotP"><a href="#">Forgot Password</a>?</p>
-      <p id="errorMsg">&nbsp;</p>
-    </form>
-  </div>
 
-  <footer id="footer">
-
-  </footer>
-
-  <script src="../js/client.js"></script> 
-</body>
--->
 </html >
