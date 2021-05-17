@@ -25,7 +25,7 @@ const client = new MongoClient(
 // static path mappings
 app.use("/js", express.static("public/js"));
 app.use("/css", express.static("public/css"));
-app.use("/img", express.static("public/images"));
+app.use("/images", express.static("public/images"));
 app.use("/html", express.static("public/html"));
 
 app.use(
@@ -54,9 +54,12 @@ app.get("/", function (req, res) {
   // where we'll slip in an audio player into the footer's left :)
   $("#footer").append('<div id="left"></div>');
   $("#footer").append(
-    "<p id='right'>Copyright ©2021, (Team 15, Ray, Maz, Johnson, and Jason), Inc. Updated: " +
-      d +
-      "</p>"
+    `<p id="students-heading">TEAM 15 TEAM MEMBERS </br>
+Jason (Jinseok) Ahn A01259569</br>
+Johnson Lau A01239870</br>
+Mazin Marwan A01242132</br>
+Raymond Wong A01248576</br>
+Updated on: ${d}</p> `
   );
 
   initDB();
@@ -75,15 +78,14 @@ app.get("/dashboard", function (req, res) {
   // check for a session first!
   if (req.session.loggedIn) {
     // DIY templating with DOM, this is only the husk of the page
-    let dash = fs.readFileSync(
-      "public/templates/dashboard.html",
-      "utf8"
-    );
+    let dash = fs.readFileSync("public/templates/dashboard.html", "utf8");
     let dashDOM = new JSDOM(dash);
     let $dash = require("jquery")(dashDOM.window);
 
     $dash("#_email").html(req.session.email);
-    $dash("#message").html(`You have logged in to redeem many coupons. Hello!<br/> logged in on ${req.session.date}`);
+    $dash("#message").html(
+      `You have logged in to redeem many coupons. Hello!<br/> logged in on ${req.session.date}`
+    );
 
     res.set("Server", "wecycle is life");
     res.send(dashDOM.serialize());
@@ -104,16 +106,16 @@ app.post("/authenticate", function (req, res) {
   console.log("Email", req.body.email);
   console.log("Password", req.body.password);
 
-
-
   let results = authenticate(
     req.body.email,
     req.body.password,
     function (rows) {
-
       if (rows == null) {
         // not found
-        res.send({ status: "fail", msg: "email or password dont match our records" });
+        res.send({
+          status: "fail",
+          msg: "email or password dont match our records",
+        });
       } else {
         // authenticate the user, create a session
 
@@ -141,21 +143,21 @@ app.post("/authenticate", function (req, res) {
 });
 
 function authenticate(emailArg, pwd, callback) {
-
-  client.db("WecycleMain").collection("Users")
-    .find({ "email": emailArg, "password": pwd })
+  client
+    .db("WecycleMain")
+    .collection("Users")
+    .find({ email: emailArg, password: pwd })
     .toArray()
     .then((data) => {
-        if (data.length > 0) {
-            // email and password found
-            // console.log(data);
-            return callback(data[0]);
-          } else {
-            // user not found
-            return callback(null);
-          }
+      if (data.length > 0) {
+        // email and password found
+        // console.log(data);
+        return callback(data[0]);
+      } else {
+        // user not found
+        return callback(null);
+      }
     });
-    
 }
 
 app.post("/logout", function (req, res) {
