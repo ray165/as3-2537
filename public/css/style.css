@@ -21,3 +21,13 @@ body {
 #landing-login {
     text-align: center;
 }
+
+.card {
+    justify-content: center;
+    align-items: center;
+}
+
+.btn btn-success {
+    justify-content: center;
+    align-items: center;
+}

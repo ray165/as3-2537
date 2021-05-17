@@ -75,16 +75,18 @@ app.get("/dashboard", function (req, res) {
   // check for a session first!
   if (req.session.loggedIn) {
     // DIY templating with DOM, this is only the husk of the page
-    let templateFile = fs.readFileSync(
-      "public/dashboard.html",
+    let dash = fs.readFileSync(
+      "public/templates/dashboard.html",
       "utf8"
     );
-    let templateDOM = new JSDOM(templateFile);
-    let $template = require("jquery")(templateDOM.window);
+    let dashDOM = new JSDOM(dash);
+    let $dash = require("jquery")(dashDOM.window);
 
-    res.set("Server", "Wazubi Engine");
-    res.set("X-Powered-By", "Wazubi");
-    res.send(templateDOM.serialize());
+    $dash("#_email").html(req.session.email);
+    $dash("#message").html(`You have logged in to redeem many coupons. Hello!<br/> logged in on ${req.session.date}`);
+
+    res.set("Server", "wecycle is life");
+    res.send(dashDOM.serialize());
   } else {
     // not logged in - no session!
     res.redirect("/");
@@ -114,14 +116,22 @@ app.post("/authenticate", function (req, res) {
         res.send({ status: "fail", msg: "email or password dont match our records" });
       } else {
         // authenticate the user, create a session
+
+        let dateOptions = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        let currentDate = new Date().toLocaleDateString("en-US", dateOptions);
+
         console.log(rows.password);
         req.session.loggedIn = true;
         req.session.email = rows.email;
+        req.session.date = currentDate;
         req.session.save(function (err) {
           // session saved
         });
-        // this will only work with non-AJAX calls
-        //res.redirect("/profile");
         // have to send a message to the browser and let front-end complete
         // the action
         res.send({ status: "success", msg: "Logged in." });
@@ -148,13 +158,14 @@ function authenticate(emailArg, pwd, callback) {
     
 }
 
-app.get("/logout", function (req, res) {
+app.post("/logout", function (req, res) {
   req.session.destroy(function (error) {
     if (error) {
       console.log(error);
     }
   });
-  res.redirect("/profile");
+  // res.redirect("/");
+  res.send({ status: "success", msg: "Logged out." });
 });
 
 // RUN SERVER
